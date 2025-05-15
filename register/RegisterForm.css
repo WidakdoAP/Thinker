@@ -76,7 +76,7 @@
     text-align: center;
   }
   
-  .login-form {
+  .register-form {
     background-color: white;
     padding: 2rem;
     border-radius: 10px;
@@ -88,12 +88,12 @@
     align-items: center;
   }
   
-  .login-form .logo {
+  .register-form .logo {
     width: 15rem;
     margin-bottom: 0.5rem;
   }
   
-  .login-form input {
+  .register-form input {
     width: 100%;
     padding: 0.8rem;
     margin-bottom: 1rem;
@@ -144,4 +144,13 @@
     font-size: 1.1rem;
     color: #888;
   }
+
+  #error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  text-align: left;
+}
  

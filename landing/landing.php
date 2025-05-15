@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../asset/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="QuestionForm.css">
+    <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Thinker</title>
 </head>
@@ -27,9 +27,20 @@
         </nav>
 
         <main class="content">
-          <h1>Hello World!</h1>   
+          <div class="content-left">
+            <h1>Hello World</h1>
+            <p>Every Programmer has a place.</p><br>
+            <div class="button-group">
+                <button type="button" onclick="window.location.href='../login/LoginForm.html'">Login</button>
+                <button type="button" onclick="window.location.href='../register/RegisterForm.html'">Register</button>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <img src="../asset/favicon.ico" class="content-logo">
+          </div> 
         </main>
     </div>
-    <script src="QuestionForm.js"></script>
+    <script src="KeywordForm.js"></script>
 </body>
 </html>

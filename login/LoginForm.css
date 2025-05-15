@@ -79,7 +79,7 @@
   
   .login-form {
     background-color: white;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -100,7 +100,6 @@
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 1rem;
   }
   
   .button-group {
@@ -127,8 +126,8 @@
   }
   
   .password-container {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
  }
 
  .password-container input {

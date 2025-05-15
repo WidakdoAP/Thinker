@@ -1,10 +1,20 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("HTTP/1.1 403 Forbidden");
+    echo "Akses ditolak.";
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../asset/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="DashboardForm.css">
+    <link rel="stylesheet" href="Admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Thinker</title>
 </head>
@@ -14,15 +24,22 @@
         <img src="../asset/3.png" class="navbar-logo">
         <img src="../asset/2.png" class="navbar-logo">
       </div>
+
+      <div>
+        <form action="" method="get">
+          <input type="text" placeholder="Search...">
+        </form>
+      </div>
+
     </header>
     
     <div class="container">
         <nav class="sidebar">
         <ul>
-          <li><i class="fas fa-home"></i><a href="">Home</a></li>
+          <li><i class="fas fa-home"></i><a href="../dashboard/DashboardForm.html">Home</a></li>
           <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
           <li><i class="fas fa-question-circle"></i><a href="../question/QuestionForm.html">Question</a></li>
-          <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
+          <li><i class="fas fa-key"></i><a href="../keyword/KeywordForm.html">Keyword</a></li>
         </ul>
         </nav>
 
