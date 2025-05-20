@@ -2,6 +2,6 @@
 session_start();
 session_unset();
 session_destroy();
-header("Location: ../login/LoginForm.html");
+header("Location: /pjbl/login/LoginForm.html");
 exit;
 ?>

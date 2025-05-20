@@ -8,7 +8,7 @@ include '../Database.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../asset/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="QuestionForm.css">
+    <link rel="stylesheet" href="Question.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Thinker</title>
 </head>
@@ -34,27 +34,33 @@ include '../Database.php';
             <div class="content-wrapper">
                 <h1 class="heading">Question</h1>
                 <?php
-                    $sql = "SELECT * FROM posts ORDER BY created_at DESC";
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
+                $sql = "SELECT posts.*, users.username 
+                        FROM posts 
+                        JOIN users ON posts.user_id = users.id 
+                        ORDER BY posts.created_at DESC";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
                         echo '
+                        <a href="QuestionForm.php?id=' . $row["id"] . '" class="card-link" style="text-decoration: none; color: inherit;">
                             <div class="card">
-                            <h2 class="card-title">' . htmlspecialchars($row["title"]) . '</h2>
-                            <p class="card-preview">' . htmlspecialchars(substr($row["content"], 0, 150)) . '...</p>
-                            <div class="card-footer">
-                                <div class="user-info">
-                                <img src="' . htmlspecialchars($row["profile_img"]) . '" class="user-avatar">
-                                <span class="user-name">' . htmlspecialchars($row["username"]) . '</span>
+                                <h2 class="card-title">' . htmlspecialchars($row["title"]) . '</h2>
+                                <p class="card-preview">' . htmlspecialchars(substr($row["content"], 0, 150)) . '...</p>
+                                <div class="card-footer">
+                                    <div class="user-info">
+                                        <img src="' . htmlspecialchars($row["profile_img"]) . '" class="user-avatar">
+                                        <span class="user-name">' . htmlspecialchars($row["username"]) . '</span>
+                                    </div>
+                                    <span class="card-time">' . date('d M Y', strtotime($row["created_at"])) . '</span>
                                 </div>
-                                <span class="card-time">' . date('d M Y', strtotime($row["created_at"])) . '</span>
                             </div>
-                            </div>';
-                        }
-                    } else {
-                        echo '<p>Tidak ada data.</p>';
+                        </a>';
                     }
-                    $conn->close();
+                } else {
+                    echo '<p>Tidak ada data.</p>';
+                }
+                $conn->close();
                 ?>
             </div>
         </main>

@@ -1,9 +1,17 @@
 <?php
 session_start();
+include '../Database.php';
+
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/LoginForm.html");
+    header("Location: ../landing/landing.php");
     exit;
 }
+
+$id = $_SESSION['user_id'];
+$query = $conn->query("SELECT username FROM users WHERE id = $id");
+$user = $query->fetch_assoc();
+$nama_user = $user['username'];
+
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +66,7 @@ if (!isset($_SESSION['user_id'])) {
         </nav>
 
         <main class="content">
-          <h1>Hello World!</h1>   
+          <h1>Welcome, <?php echo htmlspecialchars($nama_user); ?>!</h1>
         </main>
     </div>
     <script src="DashboardForm.js"></script>
