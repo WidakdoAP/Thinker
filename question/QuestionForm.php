@@ -56,10 +56,10 @@ $comments = $commentStmt->get_result();
                 <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
             </ul>
         </nav>
-        
-        <ul>
-          <li><i class="fas fa-arrow"></i><a href="">Home</a></li>
-        </ul>
+
+        <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+        </a>
         
         <main class="content">
             <div class="post-container">
