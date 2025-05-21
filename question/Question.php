@@ -23,10 +23,10 @@ include '../Database.php';
     <div class="container">
         <nav class="sidebar">
         <ul>
-          <li><i class="fas fa-home"></i><a href="">Home</a></li>
+          <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
           <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
-          <li><i class="fas fa-question-circle"></i><a href="../question/QuestionForm.html">Question</a></li>
-          <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
+          <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
+          <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
         </ul>
         </nav>
 

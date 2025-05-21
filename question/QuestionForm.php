@@ -56,7 +56,11 @@ $comments = $commentStmt->get_result();
                 <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
             </ul>
         </nav>
-
+        
+        <ul>
+          <li><i class="fas fa-arrow"></i><a href="">Home</a></li>
+        </ul>
+        
         <main class="content">
             <div class="post-container">
                 <div class="post-user"><?= htmlspecialchars($row['username']) ?></div>
