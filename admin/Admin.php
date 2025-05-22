@@ -26,7 +26,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
       </div>
 
       <div>
-        <form action="" method="get">
+        <form method="get">
           <input type="text" placeholder="Search...">
         </form>
       </div>
@@ -37,15 +37,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         <nav class="sidebar">
         <ul>
           <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
-          <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
+          <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
           <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
-          <li><i class="fas fa-key"></i><a href="../keyword/KeywordForm.html">Keyword</a></li>
+          <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+          <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
         </ul>
         </nav>
 
         <main class="content">
         </main>
     </div>
-    <script src="DashboardForm.js"></script>
 </body>
 </html>

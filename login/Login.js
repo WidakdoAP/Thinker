@@ -10,7 +10,7 @@ function validateForm() {
 
     const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      errorMessage.textContent = "Password minimal 8 karakter dan harus mengandung huruf.";
+      errorMessage.textContent = "Password minimal harus 8 karakter dan mengandung huruf.";
       return false;
     }
 

@@ -28,9 +28,13 @@ function submitContent() {
   const hidden = document.getElementById('hiddenContent');
   hidden.value = editor.innerHTML.trim();
 
-  if (hidden.value === '' || hidden.value === '<br>') {
+  const plainText = editor.innerText.trim();
+
+  if (plainText === '' || plainText === '<br>') {
     alert('Komentar tidak boleh kosong.');
     return false;
   }
   return true;
 }
+
+console.log("Hello World!");

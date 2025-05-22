@@ -25,8 +25,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 header("Location: ../dashboard/Dashboard.php");
             }
             exit;
-        } else {
-            echo "Password salah.";
         }
     } else {
         echo "Username tidak ditemukan.";
@@ -57,15 +55,16 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     <div class="container">
         <nav class="sidebar">
         <ul>
-            <li><i class="fas fa-home"></i><a href="../dashboard/DashboardForm.php">Home</a></li>
-            <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
+            <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
+            <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
             <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
-            <li><i class="fas fa-key"></i><a href="../keyword/KeywordForm.php">Keyword</a></li>
+            <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+            <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
         </ul>
         </nav>
 
         <main class="content">
-            <form class="login-form" id="loginForm" onsubmit="return validateForm()">
+            <form class="login-form" id="loginForm" onsubmit="return validateForm()" method="post">
                 <img src="../asset/logo.png" alt="Logo Website" class="logo">
               
                 <input type="text" id="username" placeholder="Username" name="username">
@@ -77,10 +76,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
               
                 <div class="button-group">
                   <button type="submit">Login</button>
-                  <button type="button" onclick="window.location.href='../register/RegisterForm.html'">Register</button>
+                  <button type="button" onclick="window.location.href='../register/Register.php'">Register</button>
                 </div>
               
-                <p id="error-message" style="color:red; margin-top: 1rem;"></p>
+                <p id="error-message"></p>
             </form>         
         </main>
     </div>

@@ -4,7 +4,7 @@ include '../Database.php';
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
-    $stmt = $conn->prepare("SELECT posts.*, users.username 
+    $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_img
                             FROM posts 
                             JOIN users ON posts.user_id = users.id 
                             WHERE posts.id = ?");
@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
     exit;
 }
 
-$commentStmt = $conn->prepare("SELECT comments.content, comments.created_at, users.username 
+$commentStmt = $conn->prepare("SELECT comments.content, comments.created_at, users.username, users.profile_img
                                FROM comments 
                                JOIN users ON comments.user_id = users.id 
                                WHERE comments.post_id = ? 
@@ -51,19 +51,25 @@ $comments = $commentStmt->get_result();
         <nav class="sidebar">
             <ul>
                 <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
-                <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
-                <li><i class="fas fa-question-circle"></i><a href="../question/QuestionForm.html">Question</a></li>
-                <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
+                <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
+                <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
+                <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+                <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
             </ul>
         </nav>
-
-        <a href="javascript:history.back()" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-        </a>
         
         <main class="content">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+
             <div class="post-container">
-                <div class="post-user"><?= htmlspecialchars($row['username']) ?></div>
+                <?php
+                    echo '<div class="post-user">
+                        <img src="' . htmlspecialchars($row["profile_img"]) . '" class="post-avatar">
+                        <span class="post-name">' . htmlspecialchars($row["username"]) . '</span>
+                        </div>';
+                ?>
                 <div class="post-time"><?= date('j F Y, H:i', strtotime($row['created_at'])) ?></div>
                 <hr>
                 <div class="post-title"><?= htmlspecialchars($row['title']) ?></div>
@@ -86,7 +92,7 @@ $comments = $commentStmt->get_result();
                 <form method="post" action="../submit.php" onsubmit="return submitContent()">
                     <input type="hidden" name="post_id" value="<?= $row['id'] ?>">
                     <input type="hidden" name="content" id="hiddenContent">
-                    <button type="submit" class=btnSubmit>Submit</button>
+                    <button type="submit" class="btnSubmit">Submit</button>
                 </form>
             </div>
 
@@ -94,18 +100,18 @@ $comments = $commentStmt->get_result();
                 if ($comments->num_rows > 0) {
                     echo '<div class="comment-list">';
                     while ($comment = $comments->fetch_assoc()) {
-                        echo '<div class="comment" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">';
-                        echo '<div class="comment-meta" style="font-size: 0.9em; color: #555;">';
-                        echo '<strong>' . htmlspecialchars($comment['username']) . '</strong>';
-                        echo '<em>' . date('d M Y H:i', strtotime($comment['created_at'])) . '</em>';
+                        echo '<div class="comment" style="background-color: #fff; margin-bottom: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 12px;">';
+                        echo '<div class="comment-meta" style="display: flex; align-items: center; font-size: 0.9em; color: #000;">';
+                        echo '<img src="' . htmlspecialchars($row["profile_img"]) . '" class="post-avatar">';
+                        echo '<span class="post-name">' . htmlspecialchars($row["username"]) . '</span><br>';
                         echo '</div>';
-                        echo '<div class="comment-content" style="margin-top: 5px;">';
+                        echo '<p style="font-size: 14px; color: #555; margin-bottom: 10px;">' . date('d M Y H:i', strtotime($comment['created_at'])) . '</p><hr>';
+                        echo '<div class="comment-content" style="margin-top: 10px; font-size: 0.9rem; line-height: 1.5;">';
                         echo $comment['content'];
                         echo '</div></div>';
                     }
                     echo '</div>';
-                } else {
-                    echo '<p>Belum ada komentar.</p>';
+                    exit;
                 }
             ?>
         </main>

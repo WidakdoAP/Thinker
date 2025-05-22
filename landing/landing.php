@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../asset/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="Landing.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Thinker</title>
 </head>
@@ -19,10 +19,11 @@
     <div class="container">
         <nav class="sidebar">
         <ul>
-          <li><i class="fas fa-home"></i><a href="">Home</a></li>
-          <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
-          <li><i class="fas fa-question-circle"></i><a href="../question/QuestionForm.html">Question</a></li>
-          <li><i class="fas fa-key"></i><a href="#">Keyword</a></li>
+          <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
+          <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
+          <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
+          <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+          <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
         </ul>
         </nav>
 
@@ -31,8 +32,8 @@
             <h1>Hello World</h1>
             <p>Every Programmer has a place.</p><br>
             <div class="button-group">
-                <button type="button" onclick="window.location.href='../login/LoginForm.html'">Login</button>
-                <button type="button" onclick="window.location.href='../register/RegisterForm.html'">Register</button>
+                <button type="button" onclick="window.location.href='../login/Login.php'">Login</button>
+                <button type="button" onclick="window.location.href='../register/Register.php'">Register</button>
             </div>
           </div>
 
@@ -41,6 +42,5 @@
           </div> 
         </main>
     </div>
-    <script src="KeywordForm.js"></script>
 </body>
 </html>

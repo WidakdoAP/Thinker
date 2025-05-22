@@ -5,13 +5,13 @@
   }
   
   body {
-    font-family: Arial, sans-serif;
+    font-family: "Segoe UI", sans-serif;
     height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #888;
   }
-
+  
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -20,10 +20,17 @@
     color: white;
     padding: 0.5rem 1rem;
     border: 1px solid grey;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6rem;
+    z-index: 1000;
   }
   
   .navbar-logo {
     height: 5rem;
+    position: relative;
   }
   
   .container {
@@ -32,13 +39,15 @@
   }
   
   .sidebar {
+    position: fixed;
+    top: 5rem;
+    left: 0;
     width: 200px;
+    height: calc(100vh - 5rem);
     background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 10px;
-    border: 1px solid grey;
+    border-right: 1px solid grey;
+    padding-top: 1rem;
+    z-index: 999;
   }
   
   .sidebar ul {
@@ -50,7 +59,7 @@
   .sidebar ul li {
     margin: 1rem 0;
   }
-
+  
   .sidebar ul li i {
     margin-right: 0.5em;
   }
@@ -70,6 +79,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 2rem;
+    margin-top: 5rem;
+    margin-left: 200px;
   }
   
   .inner-content {
@@ -138,19 +150,17 @@
   .toggle-password {
     position: absolute;
     right: 10px;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 1.1rem;
-    color: #888;
   }
 
   #error-message {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
-  width: 100%;
-  text-align: left;
-}
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+  }
  

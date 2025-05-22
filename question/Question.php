@@ -24,9 +24,10 @@ include '../Database.php';
         <nav class="sidebar">
         <ul>
           <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
-          <li><i class="fas fa-user"></i><a href="../user/UserForm.html">User</a></li>
+          <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
           <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
           <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+          <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
         </ul>
         </nav>
 
@@ -34,7 +35,7 @@ include '../Database.php';
             <div class="content-wrapper">
                 <h1 class="heading">Question</h1>
                 <?php
-                $sql = "SELECT posts.*, users.username 
+                $sql = "SELECT posts.*, users.username, users.profile_img 
                         FROM posts 
                         JOIN users ON posts.user_id = users.id 
                         ORDER BY posts.created_at DESC";
