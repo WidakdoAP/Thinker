@@ -70,15 +70,21 @@
   
   .sidebar ul li {
     margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-left: 3rem; 
   }
-  
+
   .sidebar ul li i {
-    margin-right: 0.5em;
+    margin-right: 1em;
+    font-size: 1.2em;
   }
-  
+
   .sidebar ul li a {
     color: rgb(0, 0, 0);
     text-decoration: none;
+    display: inline-block;
   }
   
   .sidebar ul li a:hover {

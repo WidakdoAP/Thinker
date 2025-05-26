@@ -20,7 +20,6 @@ if (empty($plainText)) {
 $sql = "INSERT INTO comments (post_id, user_id, content, created_at) VALUES (?, ?, ?, NOW())";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("iis", $post_id, $user_id, $content);
-$stmt->execute();
 
 if ($stmt->execute()) {
     header("Location: /pjbl/question/QuestionForm.php?id=" . $post_id);

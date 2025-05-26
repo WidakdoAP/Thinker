@@ -49,13 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     <div class="container">
         <nav class="sidebar">
-        <ul>
-          <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
-          <li><i class="fas fa-user"></i><a href="../user/User.php">User</a></li>
-          <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
-          <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
-          <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
-        </ul>
+          <ul>
+            <li><i class="fas fa-home"></i><a href="../dashboard/Dashboard.php">Home</a></li>
+            <li><i class="fas fa-circle-user"></i><a href="../user/User.php">User</a></li>
+            <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
+            <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
+            <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
+          </ul>
         </nav>
 
         <main class="content">
