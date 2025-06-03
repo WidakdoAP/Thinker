@@ -7,19 +7,30 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$search = $_GET['keyword'] ?? '';
+$searchParam = '%' . $search . '%';
+
 $id = $_SESSION['user_id'];
 $query = $conn->query("SELECT username FROM users WHERE id = $id");
 $user = $query->fetch_assoc();
 $nama_user = $user['username'];
 
-$sql = "SELECT posts.*, users.username, users.profile_img 
-        FROM posts 
-        JOIN users ON posts.user_id = users.id 
-        WHERE posts.user_id = ? 
-        ORDER BY posts.created_at DESC";
+$sql = "SELECT posts.*, users.username, users.profile_img, GROUP_CONCAT(DISTINCT keywords.name SEPARATOR ', ') AS keyword_names
+FROM posts
+JOIN users ON posts.user_id = users.id
+LEFT JOIN post_keywords ON posts.id = post_keywords.post_id
+LEFT JOIN keywords ON post_keywords.keyword_id = keywords.id
+WHERE posts.user_id = ?
+  AND (
+    posts.title LIKE ? 
+    OR users.username LIKE ? 
+    OR keywords.name LIKE ?
+  )
+GROUP BY posts.id
+ORDER BY posts.created_at DESC";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("isss", $id, $searchParam, $searchParam, $searchParam);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -43,8 +54,8 @@ $result = $stmt->get_result();
 
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
-        <form action="" method="get">
-          <input type="text" class="search-form" placeholder="Search...">
+        <form method="get">
+          <input type="text" name="keyword" class="search-form" placeholder="Search...">
         </form>
       </div>
     </header>
@@ -56,42 +67,58 @@ $result = $stmt->get_result();
             <li><i class="fas fa-circle-user"></i><a href="../user/User.php">User</a></li>
             <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
             <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
-            <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a></li>
+              <li><i class="fas fa-user-secret"></i><a href="../register/Register.php?as=admin">Add Admin</a></li>
+            <?php endif; ?>
           </ul>
-        
-          <form action="../logout.php" method="post">
-            <button type="submit" class="btnLogout">Logout</button>
-          </form>
         </nav>
 
         <main class="content">
           <div class="content-wrapper">
-            <h1>Welcome, <?php echo htmlspecialchars($nama_user); ?>!</h1>
-            <p>Find various answers to your questions, as well as answering other people's questions.</p><hr>
+            <div class="content-header">
+              <h1>Welcome, <?php echo htmlspecialchars($nama_user); ?>!</h1><hr>
+              <button type="button" class="btnAsk" onclick="window.location.href='../ask/Ask.php'">Ask</button>
+            </div><hr>
             <?php
-                if ($result->num_rows > 0) {
-                  while ($row = $result->fetch_assoc()) {
-                    echo '
-                      <a href="../question/QuestionForm.php?id=' . $row["id"] . '" class="card-link" style="text-decoration: none; color: inherit;">
-                      <div class="card">
-                        <h2 class="card-title">' . htmlspecialchars($row["title"]) . '</h2>
-                        <p class="card-preview">' . htmlspecialchars(substr($row["content"], 0, 150)) . '...</p>
-                          <div class="card-footer">
-                            <div class="user-info">
-                              <img src="' . htmlspecialchars($row["profile_img"]) . '" class="user-avatar">
-                              <span class="user-name">' . htmlspecialchars($row["username"]) . '</span>
-                            </div>
-                            <span class="card-time">' . date('d M Y', strtotime($row["created_at"])) . '</span>
-                          </div>
+              if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                  $verifiedText = '';
+                  if ($row['verified']) {
+                    $verifiedText = '<span class="verified">Verified |</span>';
+                  }
+                  echo '
+                  <div class="card" onclick="window.location.href=\'../question/QuestionForm.php?id=' . $row["id"] . '\'" style="cursor: pointer;">
+                    <h2 class="card-title">' . htmlspecialchars($row["title"]) . '</h2>
+                    <p class="card-preview">' . htmlspecialchars(substr($row["content"], 0, 225)) . '...</p>
+                    <div class="card-footer">
+                      <div class="user-info">
+                        <a href="../user/User.php?username=' . urlencode($row["username"]) . '" onclick="event.stopPropagation();">
+                          <img src="' . htmlspecialchars($row["profile_img"]) . '" class="user-avatar">
+                        </a>
+                        <span class="user-name">' . htmlspecialchars($row["username"]) . '</span>
+                        <div class="keyword-labels">
+                          ';
+                          $keywords = explode(',', $row['keyword_names']);
+                          foreach ($keywords as $keyword) {
+                          echo '<span class="keyword-tag">' . htmlspecialchars(trim($keyword)) . '</span>';
+                          }
+                          echo '
+                        </div>
                       </div>
-                      </a>';
-                    }
+                      <div class="post-time-wrapper">
+                        ' . $verifiedText . '
+                        <span class="card-time">' . date('d M Y', strtotime($row["created_at"])) . '</span>
+                      </div>
+                    </div>
+                  </div>';
+                }
               } else {
-                echo '<p>Tidak ada data.</p>';
+                echo '<p>Belum ada Pertanyaan.</p>';
               }
               $conn->close();
             ?>
-            </div>
+          </div>
         </main>
     </div>
 </body>

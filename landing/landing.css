@@ -95,8 +95,14 @@
     margin-left: 5rem;
   }
 
+  .content-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   .content-logo {
-    width: 300px;
+    width: 400px;
     height: auto;
   }
 

@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     die("Akses ditolak. Silakan login.");
 }
 
+$keyword_query = "SELECT * FROM keywords";
+$keyword_result = mysqli_query($conn, $keyword_query);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'] ?? '';
     $content = $_POST['content'] ?? '';
@@ -23,9 +26,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("iss", $user_id, $title, $content);
 
     if ($stmt->execute()) {
+    $post_id = $stmt->insert_id;
+
+    if (!empty($_POST['keywords']) && is_array($_POST['keywords'])) {
+        $keyword_stmt = $conn->prepare("INSERT INTO post_keywords (post_id, keyword_id) VALUES (?, ?)");
+        foreach ($_POST['keywords'] as $keyword_id) {
+            $keyword_stmt->bind_param("ii", $post_id, $keyword_id);
+            $keyword_stmt->execute();
+        }
+        $keyword_stmt->close();
+    }
         header("Location: ../question/Question.php");
         exit();
-    } else {
+    }
+    else {
         echo "Gagal menyimpan pertanyaan: " . $stmt->error;
     }
 
@@ -59,7 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <li><i class="fas fa-circle-user"></i><a href="../user/User.php">User</a></li>
           <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
           <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
-          <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a></li>
+              <li><i class="fas fa-user-secret"></i><a href="../register/Register.php?as=admin">Add Admin</a></li>
+            <?php endif; ?>
         </ul>
         </nav>
 
@@ -71,8 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" id="title" name="title" placeholder="Your Title...">
 
                 <p>Keywords</p>
-                <input type="text" id="keywords" name="keywords" placeholder="Use # for keyword">
-                <p id="error-message"></p>
+                <select name="keywords[]" multiple size="5" style="width: 100%; padding: 8px;">
+                    <?php while ($row = mysqli_fetch_assoc($keyword_result)) : ?>
+                        <option value="<?= htmlspecialchars($row['id']) ?>">
+                            <?= htmlspecialchars($row['name']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+
 
                 <div class="editor-container">
                     <h2>Submit Question</h2>
@@ -82,7 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div id="editor" contenteditable="true"></div>
                 </div>
-
+                
+                <input type="hidden" name="post_id" value="<?= $row['id'] ?>">
                 <input type="hidden" name="content" id="hiddenContent">
                 <button type="submit" class="btnPost">Post</button>
             </form>

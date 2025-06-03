@@ -1,5 +1,6 @@
 <?php
 include '../Database.php';
+session_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -19,10 +20,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $checkStmt->close();
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $defaultProfileImg = '../asset/3.png';
+    $role = 'user';
+    $about = 'Hi :3'
+    if (
+        isset($_GET['as']) && $_GET['as'] === 'admin' &&
+        isset($_SESSION['user_id'])
+    ) {
+        // Cek apakah yang sedang login adalah admin
+        $stmtCheckAdmin = $conn->prepare("SELECT role FROM users WHERE id = ?");
+        $stmtCheckAdmin->bind_param("i", $_SESSION['user_id']);
+        $stmtCheckAdmin->execute();
+        $result = $stmtCheckAdmin->get_result();
+        $adminData = $result->fetch_assoc();
+        if ($adminData && $adminData['role'] === 'admin') {
+            $role = 'admin';
+        }
+        $stmtCheckAdmin->close();
+    }
 
-    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $username, $hashedPassword);
+    $stmt = $conn->prepare("INSERT INTO users (username, password, role, profile_img) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $username, $hashedPassword, $role, $defaultProfileImg);
     $stmt->execute();
+    header("Location: /pjbl/login/Login.php");
+    exit;
 
     $stmt->close();
     $conn->close();
@@ -54,7 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <li><i class="fas fa-circle-user"></i><a href="../user/User.php">User</a></li>
             <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
             <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
-            <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a></li>
+              <li><i class="fas fa-user-secret"></i><a href="../register/Register.php?as=admin">Add Admin</a></li>
+            <?php endif; ?>
           </ul>
         </nav>
 

@@ -19,15 +19,11 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            if ($user['role'] === 'admin') {
-                header("Location: ../admin/Admin.php");
-            } else {
-                header("Location: ../dashboard/Dashboard.php");
-            }
+            header("Location: ../dashboard/Dashboard.php");
             exit;
         }
     } else {
-        echo "Username tidak ditemukan.";
+        echo "<alert>Username tidak ditemukan.</alert>";
     }
     $stmt->close();
     $conn->close();
@@ -59,7 +55,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 <li><i class="fas fa-circle-user"></i><a href="../user/User.php">User</a></li>
                 <li><i class="fas fa-question-circle"></i><a href="../question/Question.php">Question</a></li>
                 <li><i class="fas fa-key"></i><a href="../keyword/Keyword.php">Keyword</a></li>
-                <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a><li>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                    <li><i class="fas fa-triangle-exclamation"></i><a href="../report/Report.php">Report</a></li>
+                    <li><i class="fas fa-user-secret"></i><a href="../register/Register.php?as=admin">Add Admin</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
 

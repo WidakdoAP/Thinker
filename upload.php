@@ -1,6 +1,6 @@
 <?php
-$uploadDir = __DIR__ . "/uploads/";
-$webPath = "/pjbl/uploads/";
+$uploadDir = __DIR__ . "/uploads/images/";
+$webPath = "/pjbl/uploads/images/";
 
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
@@ -22,11 +22,12 @@ if ($_FILES["image"]["error"] === UPLOAD_ERR_OK) {
         $relativePath = $webPath . $uniqueName;
         include 'Database.php';
 
-        $comment_id = $_POST['comment_id'] ?? null;
-        $post_id = $_POST['post_id'] ?? null;
+        $related_id = $_POST['comment_id'] ?? $_POST['post_id'] ?? null;
+        $related_type = isset($_POST['comment_id']) ? 'comment' : (isset($_POST['post_id']) ? 'post' : null);
 
-        $stmt = $conn->prepare("INSERT INTO images (comment_id, post_id, file_path) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $comment_id, $post_id, $relativePath);
+
+        $stmt = $conn->prepare("INSERT INTO images (related_id, related_type, file_path) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $related_id, $related_type, $relativePath);
         $stmt->execute();
         $stmt->close();
 

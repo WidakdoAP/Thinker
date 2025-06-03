@@ -175,3 +175,34 @@
   .btnPost:hover {
     background-color: #555;
   }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .dropdown-btn {
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1;
+    padding: 10px;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }

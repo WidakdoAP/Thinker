@@ -21,10 +21,18 @@ editor.addEventListener("drop", (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
 
+    const postIdInput = document.querySelector('input[name="post_id"]');
+    const commentIdInput = document.querySelector('input[name="comment_id"]');
+    const postId = postIdInput ? postIdInput.value : null;
+    const commentId = commentIdInput ? commentIdInput.value : null;
+
     for (let file of files) {
         if (file.type.startsWith("image/")) {
             const formData = new FormData();
             formData.append("image", file);
+
+            if (postId) formData.append("post_id", postId);
+            if (commentId) formData.append("comment_id", commentId);
 
             fetch("/pjbl/upload.php", {
                 method: "POST",
