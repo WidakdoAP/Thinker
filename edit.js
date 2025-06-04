@@ -13,6 +13,10 @@ function uploadImage(file) {
     });
 }
 
+editor.addEventListener("keydown", (e) => {
+    e.preventDefault();
+});
+
 editor.addEventListener("paste", (e) => {
     const items = e.clipboardData.items;
     let hasImage = false;

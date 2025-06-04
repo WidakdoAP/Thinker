@@ -7,6 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+
+
 // Apakah URL menyertakan username (untuk lihat profil orang lain)?
 if (isset($_GET['username'])) {
     $username = $_GET['username'];
@@ -32,6 +34,10 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $stmt->close();
 
+if (!$row) {
+    echo "User not found.";
+    exit();
+}
 $usernameForPosts = $row['username'];
 $limit = 5; // jumlah post per halaman
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
@@ -65,10 +71,16 @@ $totalPosts = $countResult->fetch_assoc()['total'];
 $totalPages = ceil($totalPosts / $limit);
 $stmtCount->close();
 
-if (!$row) {
-    echo "User not found.";
-    exit();
+$loggedInUsername = null;
+$stmtLoggedIn = $conn->prepare("SELECT username FROM users WHERE id = ?");
+$stmtLoggedIn->bind_param("i", $_SESSION['user_id']);
+$stmtLoggedIn->execute();
+$resultLoggedIn = $stmtLoggedIn->get_result();
+if ($rowLoggedIn = $resultLoggedIn->fetch_assoc()) {
+    $loggedInUsername = $rowLoggedIn['username'];
 }
+$stmtLoggedIn->close()
+
 ?>
 
 
@@ -112,14 +124,15 @@ if (!$row) {
                         <h2><?= htmlspecialchars($row['username']) ?></h2><hr>
                         <p><?= nl2br(htmlspecialchars($row['about'])) ?></p>
                     </div>
-                    <div class="button-group">
-                        <a href="edit.php" class="edit-button">Edit</a>
-                        <a href="../logout.php" class="logout-button">Logout</a>
-                    </div>
+                    <?php if ($usernameForPosts === $loggedInUsername): ?>
+                        <div class="button-group">
+                            <a href="edit.php" class="btn edit-button">Edit</a>
+                            <a href="../logout.php" class="btn logout-button">Logout</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
-
-                    <h2>Activity</h2>
-                    <?php
+                <h2>Activity</h2>
+                <?php
                     if ($postsResult->num_rows > 0) {
                     while ($row = $postsResult->fetch_assoc()) {
                         $verifiedText = '';
@@ -167,8 +180,7 @@ if (!$row) {
                         echo '</div>';
                     }
                     $conn->close();
-                    ?>
-                </div>
+                ?>
             </div>
         </main>
     </div>

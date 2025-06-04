@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $defaultProfileImg = '../asset/3.png';
     $role = 'user';
-    $about = 'Hi :3';
+    $about = "Hi, i'm new here, wanna be my friend? :)";
     if (isset($_GET['as']) && $_GET['as'] === 'admin' && isset($_SESSION['user_id'])) {
         // Cek apakah yang sedang login adalah admin
         $stmtCheckAdmin = $conn->prepare("SELECT role FROM users WHERE id = ?");
@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmtCheckAdmin->close();
     }
 
-    $stmt = $conn->prepare("INSERT INTO users (username, password, role, profile_img) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $username, $hashedPassword, $role, $defaultProfileImg);
+    $stmt = $conn->prepare("INSERT INTO users (username, password, role, profile_img, about) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $username, $hashedPassword, $role, $defaultProfileImg, $about);
     $stmt->execute();
     header("Location: /pjbl/login/Login.php");
     exit;
