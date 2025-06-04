@@ -33,6 +33,10 @@ $row = $result->fetch_assoc();
 $stmt->close();
 
 $usernameForPosts = $row['username'];
+$limit = 5; // jumlah post per halaman
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
 $stmtPosts = $conn->prepare("
     SELECT p.id, p.title, p.content, p.created_at, u.username, u.profile_img, p.verified, 
     GROUP_CONCAT(k.name SEPARATOR ', ') AS keyword_names
@@ -43,11 +47,23 @@ $stmtPosts = $conn->prepare("
     WHERE u.username = ?
     GROUP BY p.id
     ORDER BY p.created_at DESC
+    LIMIT ? OFFSET ?
 ");
-$stmtPosts->bind_param("s", $usernameForPosts);
+$stmtPosts->bind_param("sii", $usernameForPosts, $limit, $offset);
 $stmtPosts->execute();
 $postsResult = $stmtPosts->get_result();
 
+$stmtCount = $conn->prepare("
+    SELECT COUNT(*) AS total FROM posts p
+    JOIN users u ON p.user_id = u.id
+    WHERE u.username = ?
+");
+$stmtCount->bind_param("s", $usernameForPosts);
+$stmtCount->execute();
+$countResult = $stmtCount->get_result();
+$totalPosts = $countResult->fetch_assoc()['total'];
+$totalPages = ceil($totalPosts / $limit);
+$stmtCount->close();
 
 if (!$row) {
     echo "User not found.";
@@ -101,8 +117,7 @@ if (!$row) {
                         <a href="../logout.php" class="logout-button">Logout</a>
                     </div>
                 </div>
-                
-                <div class="activity-section">
+
                     <h2>Activity</h2>
                     <?php
                     if ($postsResult->num_rows > 0) {
@@ -137,6 +152,19 @@ if (!$row) {
                     }
                     } else {
                     echo '<p>Belum ada Pertanyaan.</p>';
+                    }
+                    if ($totalPages > 0) {
+                        echo '<div class="pagination">';
+                        for ($i = 1; $i <= $totalPages; $i++) {
+                            $usernameParam = isset($_GET['username']) ? '&username=' . urlencode($_GET['username']) : '';
+
+                            if ($i == $page) {
+                                echo "<a style='font-weight: bold;'>$i</a>";
+                            } else {
+                                echo "<a href='User.php?page=$i$usernameParam'>$i</a>";
+                            }
+                        }
+                        echo '</div>';
                     }
                     $conn->close();
                     ?>

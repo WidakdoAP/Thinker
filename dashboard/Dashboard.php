@@ -15,7 +15,35 @@ $query = $conn->query("SELECT username FROM users WHERE id = $id");
 $user = $query->fetch_assoc();
 $nama_user = $user['username'];
 
-$sql = "SELECT posts.*, users.username, users.profile_img, GROUP_CONCAT(DISTINCT keywords.name SEPARATOR ', ') AS keyword_names
+// Pagination setup
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
+// Total count for pagination
+$countSql = "
+SELECT COUNT(DISTINCT posts.id) AS total
+FROM posts
+JOIN users ON posts.user_id = users.id
+LEFT JOIN post_keywords ON posts.id = post_keywords.post_id
+LEFT JOIN keywords ON post_keywords.keyword_id = keywords.id
+WHERE posts.user_id = ?
+  AND (
+    posts.title LIKE ? 
+    OR users.username LIKE ? 
+    OR keywords.name LIKE ?
+  )
+";
+$countStmt = $conn->prepare($countSql);
+$countStmt->bind_param("isss", $id, $searchParam, $searchParam, $searchParam);
+$countStmt->execute();
+$countResult = $countStmt->get_result();
+$totalPosts = $countResult->fetch_assoc()['total'];
+$totalPages = ceil($totalPosts / $limit);
+
+// Fetch paginated data
+$sql = "
+SELECT posts.*, users.username, users.profile_img, GROUP_CONCAT(DISTINCT keywords.name SEPARATOR ', ') AS keyword_names
 FROM posts
 JOIN users ON posts.user_id = users.id
 LEFT JOIN post_keywords ON posts.id = post_keywords.post_id
@@ -27,13 +55,15 @@ WHERE posts.user_id = ?
     OR keywords.name LIKE ?
   )
 GROUP BY posts.id
-ORDER BY posts.created_at DESC";
-
+ORDER BY posts.created_at DESC
+LIMIT ? OFFSET ?
+";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isss", $id, $searchParam, $searchParam, $searchParam);
+$stmt->bind_param("isssii", $id, $searchParam, $searchParam, $searchParam, $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -118,6 +148,19 @@ $result = $stmt->get_result();
               }
               $conn->close();
             ?>
+            <div class="pagination">
+              <?php if ($page > 1): ?>
+                <a href="?keyword=<?= urlencode($search) ?>&page=<?= $page - 1 ?>">&laquo; Prev</a>
+              <?php endif; ?>
+
+              <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?keyword=<?= urlencode($search) ?>&page=<?= $i ?>" <?= ($i == $page) ? 'class="active"' : '' ?>><?= $i ?></a>
+              <?php endfor; ?>
+
+              <?php if ($page < $totalPages): ?>
+                <a href="?keyword=<?= urlencode($search) ?>&page=<?= $page + 1 ?>">Next &raquo;</a>
+              <?php endif; ?>
+            </div>
           </div>
         </main>
     </div>
