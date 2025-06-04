@@ -22,11 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $defaultProfileImg = '../asset/3.png';
     $role = 'user';
-    $about = 'Hi :3'
-    if (
-        isset($_GET['as']) && $_GET['as'] === 'admin' &&
-        isset($_SESSION['user_id'])
-    ) {
+    $about = 'Hi :3';
+    if (isset($_GET['as']) && $_GET['as'] === 'admin' && isset($_SESSION['user_id'])) {
         // Cek apakah yang sedang login adalah admin
         $stmtCheckAdmin = $conn->prepare("SELECT role FROM users WHERE id = ?");
         $stmtCheckAdmin->bind_param("i", $_SESSION['user_id']);

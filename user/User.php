@@ -7,14 +7,54 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
-$query = "SELECT username, profile_img, about FROM users WHERE id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user_id);
+// Apakah URL menyertakan username (untuk lihat profil orang lain)?
+if (isset($_GET['username'])) {
+    $username = $_GET['username'];
+
+    // Mencegah akses karakter ilegal
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+        echo "Username tidak valid.";
+        exit();
+    }
+
+    // Ambil data berdasarkan username
+    $stmt = $conn->prepare("SELECT username, profile_img, about FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+} else {
+    // Kalau tidak ada parameter, lihat profil diri sendiri
+    $user_id = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT username, profile_img, about FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
+$stmt->close();
+
+$usernameForPosts = $row['username'];
+$stmtPosts = $conn->prepare("
+    SELECT p.id, p.title, p.content, p.created_at, u.username, u.profile_img, p.verified, 
+    GROUP_CONCAT(k.name SEPARATOR ', ') AS keyword_names
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    LEFT JOIN post_keywords pk ON p.id = pk.post_id
+    LEFT JOIN keywords k ON pk.keyword_id = k.id
+    WHERE u.username = ?
+    GROUP BY p.id
+    ORDER BY p.created_at DESC
+");
+$stmtPosts->bind_param("s", $usernameForPosts);
+$stmtPosts->execute();
+$postsResult = $stmtPosts->get_result();
+
+
+if (!$row) {
+    echo "User not found.";
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -65,11 +105,11 @@ $row = $result->fetch_assoc();
                 <div class="activity-section">
                     <h2>Activity</h2>
                     <?php
-                    if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                    if ($postsResult->num_rows > 0) {
+                    while ($row = $postsResult->fetch_assoc()) {
                         $verifiedText = '';
                         if ($row['verified']) {
-                        $verifiedText = '<p class="verified">Verified |</p>';
+                        $verifiedText = '<span class="verified">Verified |</span>';
                         }
                         echo '
                         <div class="card" onclick="window.location.href=\'../question/QuestionForm.php?id=' . $row["id"] . '\'" style="cursor: pointer;">

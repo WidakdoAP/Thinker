@@ -1,0 +1,161 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Segoe UI", sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #888;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: 1px solid grey;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6rem;
+    z-index: 1000;
+  }
+  
+  .navbar-logo {
+    height: 5rem;
+  }
+  
+  .container {
+    display: flex;
+    flex: 1;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 5rem;
+    left: 0;
+    width: 200px;
+    height: calc(100vh - 5rem);
+    background-color: #ffffff;
+    border-right: 1px solid grey;
+    padding-top: 1rem;
+    z-index: 999;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .sidebar ul li {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-left: 3rem; 
+  }
+
+  .sidebar ul li i {
+    margin-right: 1em;
+    font-size: 1.2em;
+  }
+
+  .sidebar ul li a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .sidebar ul li a:hover {
+    text-decoration: underline;
+  }
+
+  .content {
+    flex: 1;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 2rem;
+    margin-top: 5rem;
+    margin-left: 200px;
+  }
+
+  .ask-form {
+    padding: 1rem;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ask-form p {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  .ask-form input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;  
+    white-space: pre;  
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .editor-container {
+    padding: 20px;
+    border-radius: 20px;
+    margin: auto;
+    width: 100%;
+  }
+
+  #editor {
+    background: white;
+    min-height: 150px;
+    border: 1px solid #555;
+    padding: 10px;
+    margin-top: -1px;
+    outline: none;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word; 
+    word-break: break-word;
+  }
+
+  .btnPost {
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+  }
+
+  .btnPost:hover {
+    background-color: #555;
+  }

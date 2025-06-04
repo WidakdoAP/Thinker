@@ -141,7 +141,7 @@ $totalPostPages = ceil($totalPosts / $postsPerPage);
                     while ($row = $posts->fetch_assoc()) {
                         $verifiedText = '';
                         if ($row['verified']) {
-                            $verifiedText = '<p class="verified">Verified |</p>';
+                            $verifiedText = '<span class="verified">Verified |</span>';
                         }
                         echo '
                         <div class="card-link-wrapper" onclick="window.location.href=\'QuestionForm.php?id=' . $row["id"] . '\'" style="text-decoration: none; color: inherit; cursor: pointer;">

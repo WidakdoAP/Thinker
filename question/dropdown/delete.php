@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($userId == $ownerId || $role == 'admin') {
         // Hapus gambar
-        $deleteImages = $conn->prepare("DELETE FROM images WHERE post_id = ?");
+        $deleteImages = $conn->prepare("DELETE FROM images WHERE related_id = ?");
         $deleteImages->bind_param("i", $id);
         $deleteImages->execute();
         $deleteImages->close();
